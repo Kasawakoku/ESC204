@@ -16,6 +16,7 @@ STEP_DELAY = 0.002     # Speed of the motor (lower is faster). Each step will ta
 i2c = busio.I2C(board.GP17, board.GP16)
 sensor = adafruit_am2320.AM2320(i2c)
 
+'''
 # 2. PIR Sensor Setup (PRETENDING THIS IS A DIGITAL LIGHT SENSOR)
 pir = digitalio.DigitalInOut(board.D4)
 pir.direction = digitalio.Direction.INPUT
@@ -30,6 +31,7 @@ dir_pin.direction = digitalio.Direction.OUTPUT
 enable_pin = digitalio.DigitalInOut(board.D13)
 enable_pin.direction = digitalio.Direction.OUTPUT
 enable_pin.value = False  # Set to False to ENABLE the TMC2209 driver
+'''
 
 # ---------------- FUNCTIONS ---------------- #
 def move_motor(steps, direction_forward=True):
@@ -44,6 +46,8 @@ def move_motor(steps, direction_forward=True):
 # ---------------- MAIN LOOP ---------------- #
 print("Starting Conveyor System...")
 
+# Start in hot mode
+is_hot_mode = True
 # Rely on temperature
 # If temperature value is sus (eg. extreme value, error, hasnt change a long time, prevent reflections?)
 # try to do light sensor as backup.
@@ -55,25 +59,31 @@ while True:
     try:
         # 1. Read Sensor Data
         current_temp = sensor.temperature
-        pir_value = pir.value 
-        # have some sort of pir value threshold
+        
+        # pir_value = pir.value
+        pir_value = None # for without pir sensor
+        
         
         # Determine Mode based on our pretend light sensor
-        is_hot_mode = True
+
+        
         
         # 2. Execute Logic Based on Modes
         if current_temp > HOT_TEMP_THRESHOLD and not is_hot_mode: 
                 print(f"Hot Mode Triggered: Temp: {current_temp}C. PIR Value: {pir_value}. Moving conveyor forward.")
-                move_motor(steps=200, direction_forward=True) # 200 steps = 1 revolution for Nema 17
+                #move_motor(steps=200, direction_forward=True) # 200 steps = 1 revolution for Nema 17
                 is_hot_mode = True
 
         elif current_temp < COLD_TEMP_THRESHOLD and is_hot_mode:
                 print(f"Cold Mode Triggered: Temp: {current_temp}C. PIR Value: {pir_value}. Moving conveyor backward.")
-                move_motor(steps=200, direction_forward=False) # Move in reverse
+                #move_motor(steps=200, direction_forward=False) # Move in reverse
                 is_hot_mode = False
 
         else:
-            print(f"No mode change. Current Temp: {current_temp}C. PIR Value: {pir_value}.")
+            if is_hot_mode:
+                print(f"Hot Mode: No mode change. Current Temp: {current_temp}C. PIR Value: {pir_value}.")
+            else:
+                print(f"Cold Mode: No mode change. Current Temp: {current_temp}C. PIR Value: {pir_value}.")
 
         time.sleep(5) # Pause to prevent overloading the CPU
         '''
