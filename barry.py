@@ -5,7 +5,10 @@ import digitalio
 import adafruit_am2320
 
 # ---------------- CONFIGURATION ---------------- #
-TEMP_THRESHOLD = 25.0  # Celsius threshold to trigger behavior change
+HOT_TEMP_THRESHOLD = 25.0  # Celsius threshold to trigger hot mode 
+COLD_TEMP_THRESHOLD = 20.0  # Celsius threshold to trigger cold mode
+# need to look back on Joburg temperature. Ideally switch should be daily
+PIR_THRESHOLD = 0.5   # Placeholder threshold for PIR sensor (if we were using it as a light sensor)
 STEP_DELAY = 0.002     # Speed of the motor (lower is faster). Each step will take 2 x 0.002 seconds.
 
 # ---------------- PIN SETUP ---------------- #
@@ -41,16 +44,39 @@ def move_motor(steps, direction_forward=True):
 # ---------------- MAIN LOOP ---------------- #
 print("Starting Conveyor System...")
 
+# Rely on temperature
+# If temperature value is sus (eg. extreme value, error, hasnt change a long time, prevent reflections?)
+# try to do light sensor as backup.
+# reflectivity of material? add to temperature for "effective temperature"?
+# but light sensor might be easier?
+# after switching modes, should only run once
+
 while True:
     try:
         # 1. Read Sensor Data
         current_temp = sensor.temperature
-        light_detected = pir.value # Pretending PIR returns True for Day, False for Night
+        pir_value = pir.value 
+        # have some sort of pir value threshold
         
         # Determine Mode based on our pretend light sensor
-        is_day_mode = light_detected 
+        is_hot_mode = True
         
         # 2. Execute Logic Based on Modes
+        if current_temp > HOT_TEMP_THRESHOLD and not is_hot_mode: 
+                print(f"Hot Mode Triggered: Temp: {current_temp}C. PIR Value: {pir_value}. Moving conveyor forward.")
+                move_motor(steps=200, direction_forward=True) # 200 steps = 1 revolution for Nema 17
+                is_hot_mode = True
+
+        elif current_temp < COLD_TEMP_THRESHOLD and is_hot_mode:
+                print(f"Cold Mode Triggered: Temp: {current_temp}C. PIR Value: {pir_value}. Moving conveyor backward.")
+                move_motor(steps=200, direction_forward=False) # Move in reverse
+                is_hot_mode = False
+
+        else:
+            print(f"No mode change. Current Temp: {current_temp}C. PIR Value: {pir_value}.")
+
+        time.sleep(5) # Pause to prevent overloading the CPU
+        '''
         if is_day_mode:
             # Day Mode Behavior
             if current_temp > TEMP_THRESHOLD: # Swapped the trigger to be temperature-based
@@ -67,8 +93,9 @@ while True:
                 STEP_DELAY = 0.005 # slower
                 move_motor(steps=100, direction_forward=False) # Reverse direction?
                 STEP_DELAY = 0.002 # reset speed
-                
-        time.sleep(0.5) # Brief pause to prevent overloading the CPU
+        '''
+
+        
 
     except Exception as e:
         # The AM2320 sometimes throws read errors, so we catch them to prevent crashes
