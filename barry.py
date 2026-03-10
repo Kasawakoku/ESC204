@@ -5,15 +5,15 @@ import digitalio
 import adafruit_am2320
 
 # ---------------- CONFIGURATION ---------------- #
-HOT_TEMP_THRESHOLD = 25.0  # Celsius threshold to trigger hot mode 
-COLD_TEMP_THRESHOLD = 20.0  # Celsius threshold to trigger cold mode
+HOT_TEMP_THRESHOLD = 25.5  # Celsius threshold to trigger hot mode 
+COLD_TEMP_THRESHOLD = 23  # Celsius threshold to trigger cold mode
 # need to look back on Joburg temperature. Ideally switch should be daily
 PIR_THRESHOLD = 0.5   # Placeholder threshold for PIR sensor (if we were using it as a light sensor)
 STEP_DELAY = 0.002     # Speed of the motor (lower is faster). Each step will take 2 x 0.002 seconds.
 
 # ---------------- PIN SETUP ---------------- #
 # 1. AM2320 Sensor Setup (I2C)
-i2c = busio.I2C(board.SCL, board.SDA)
+i2c = busio.I2C(board.GP17, board.GP16)
 sensor = adafruit_am2320.AM2320(i2c)
 
 # 2. PIR Sensor Setup (PRETENDING THIS IS A DIGITAL LIGHT SENSOR)
