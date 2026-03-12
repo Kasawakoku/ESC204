@@ -11,6 +11,10 @@ COLD_TEMP_THRESHOLD = 23  # Celsius threshold to trigger cold mode
 PIR_THRESHOLD = 0.5   # Placeholder threshold for PIR sensor (if we were using it as a light sensor)
 STEP_DELAY = 0.002     # Speed of the motor (lower is faster). Each step will take 2 x 0.002 seconds.
 
+
+# HEATING_COEFFICIENT = 1.2 # Calibration constant. Degrees (C) to subtract per 1.0V of light reading.
+# Finding the actual value may require experimentation. Hard
+
 # ---------------- PIN SETUP ---------------- #
 # 1. AM2320 Sensor Setup (I2C)
 i2c = busio.I2C(board.GP17, board.GP16)
@@ -18,17 +22,22 @@ sensor = adafruit_am2320.AM2320(i2c)
 
 '''
 # 2. PIR Sensor Setup (PRETENDING THIS IS A DIGITAL LIGHT SENSOR)
-pir = digitalio.DigitalInOut(board.D4)
+pir = digitalio.DigitalInOut(board.D4) # should change
 pir.direction = digitalio.Direction.INPUT
 
-# 3. TMC2209 Stepper Driver Setup
-step_pin = digitalio.DigitalInOut(board.D5)
+# 3. Photoresistor Setup (Using your native analogio code)
+photoresistor_pin = board.GP26_A0 # can change
+photoresistor = analogio.AnalogIn(photoresistor_pin)
+ADC_REF = photoresistor.reference_voltage
+
+# 4. TMC2209 Stepper Driver Setup
+step_pin = digitalio.DigitalInOut(board.D5) # should change
 step_pin.direction = digitalio.Direction.OUTPUT
 
-dir_pin = digitalio.DigitalInOut(board.D6)
+dir_pin = digitalio.DigitalInOut(board.D6) # should change
 dir_pin.direction = digitalio.Direction.OUTPUT
 
-enable_pin = digitalio.DigitalInOut(board.D13)
+enable_pin = digitalio.DigitalInOut(board.D13) # should change
 enable_pin.direction = digitalio.Direction.OUTPUT
 enable_pin.value = False  # Set to False to ENABLE the TMC2209 driver
 '''
@@ -63,6 +72,14 @@ while True:
         # pir_value = pir.value
         pir_value = None # for without pir sensor
         
+        # --- CALCULATE ADJUSTED TEMPERATURE ---
+        # ldr_voltage = adc_to_voltage(photoresistor.value)
+        # Calculate the compensation. We use max(0, ...) so we don't accidentally add heat in the dark.
+        # temp_compensation = max(0, ldr_voltage * HEATING_COEFFICIENT)
+        # adjusted_temp = current_temp - temp_compensation
+        #
+        # For the logic below, you would replace 'current_temp' with 'adjusted_temp'
+        # e.g., if adjusted_temp > HOT_TEMP_THRESHOLD and not is_hot_mode:
         
         # Determine Mode based on our pretend light sensor
 
