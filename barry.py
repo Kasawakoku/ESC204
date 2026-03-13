@@ -5,7 +5,7 @@ import digitalio
 import adafruit_am2320
 
 # ---------------- CONFIGURATION ---------------- #
-HOT_TEMP_THRESHOLD = 25.5  # Celsius threshold to trigger hot mode 
+HOT_TEMP_THRESHOLD = 30  # Celsius threshold to trigger hot mode 
 COLD_TEMP_THRESHOLD = 25  # Celsius threshold to trigger cold mode
 # for testing. need to look back on Joburg temperature. Ideally switch should be daily
 PIR_THRESHOLD = 0.5   # Placeholder threshold for PIR sensor (if we were using it as a light sensor)
@@ -32,16 +32,15 @@ enable_pin = digitalio.DigitalInOut(board.GP13) # should change
 enable_pin.direction = digitalio.Direction.OUTPUT
 enable_pin.value = False  # Set to False to ENABLE the TMC2209 driver
 
-'''
 # 3. PIR Sensor Setup (PRETENDING THIS IS A DIGITAL LIGHT SENSOR)
 pir = digitalio.DigitalInOut(board.GP4) # should change
 pir.direction = digitalio.Direction.INPUT
 
 # 4. Photoresistor Setup (Using your native analogio code)
-photoresistor_pin = board.GP26_A0 # can change
+photoresistor_pin = board.GP26_A0
 photoresistor = analogio.AnalogIn(photoresistor_pin)
-ADC_REF = photoresistor.reference_voltage
-'''
+#ADC_REF = photoresistor.reference_voltage
+
 
 # ---------------- FUNCTIONS ---------------- #
 def move_motor(steps, direction_forward=True):
@@ -69,22 +68,12 @@ while True:
     try:
         # 1. Read Sensor Data
         current_temp = sensor.temperature
+        current_temp += (photoresistor.value/(-2500)+8) #temperature adjustment to account for the effect of sunlight exposure on the temperature of the material
+        #under the current conversion, when it is ambiant indoor birhgtness (simulating average day temp) the temperaturewill rise by ~5 degrees. When the resister is covered (simulating night) the temperature will rise by 0C
+        pir_value = pir.value
+        #pir_value = None #for without pir testing
         
-        # pir_value = pir.value
-        pir_value = None # for without pir sensor
-        
-        # --- CALCULATE ADJUSTED TEMPERATURE ---
-        # ldr_voltage = adc_to_voltage(photoresistor.value)
-        # Calculate the compensation. We use max(0, ...) so we don't accidentally add heat in the dark.
-        # temp_compensation = max(0, ldr_voltage * HEATING_COEFFICIENT)
-        # adjusted_temp = current_temp - temp_compensation
-        #
-        # For the logic below, you would replace 'current_temp' with 'adjusted_temp'
-        # e.g., if adjusted_temp > HOT_TEMP_THRESHOLD and not is_hot_mode:
-        
-        # Determine Mode based on our pretend light sensor
 
-        # 2. Execute Logic Based on Modes
         if current_temp > HOT_TEMP_THRESHOLD and not is_hot_mode: 
                 print(f"Hot Mode Triggered: Temp: {current_temp}C. PIR Value: {pir_value}. Moving conveyor forward.")
                 move_motor(steps=200, direction_forward=True) # 200 steps = 1 revolution for Nema 17
@@ -103,6 +92,7 @@ while True:
 
         time.sleep(5) # Pause to prevent overloading the CPU
         '''
+        we are not using this....
         if is_day_mode:
             # Day Mode Behavior
             if current_temp > TEMP_THRESHOLD: # Swapped the trigger to be temperature-based
