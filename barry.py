@@ -87,9 +87,9 @@ while True:
 
         else:
             if is_hot_mode:
-                print(f"Hot Mode: No mode change. Current Temp: {current_temp}C. PIR Value: {pir_value}.")
+                print(f"Hot Mode: No mode change. Current Temp: {current_temp}C. PIR Value: {pir_value}. Photoresistor Value: {photoresistor.value}.")
             else:
-                print(f"Cold Mode: No mode change. Current Temp: {current_temp}C. PIR Value: {pir_value}.")
+                print(f"Cold Mode: No mode change. Current Temp: {current_temp}C. PIR Value: {pir_value}. Photoresistor Value: {photoresistor.value}.")
 
         time.sleep(5) # Pause to prevent overloading the CPU
         '''
