@@ -3,6 +3,7 @@ import board
 import busio
 import digitalio
 import adafruit_am2320
+import analogio
 
 # ---------------- CONFIGURATION ---------------- #
 HOT_TEMP_THRESHOLD = 30  # Celsius threshold to trigger hot mode 
