@@ -11,7 +11,7 @@ COLD_TEMP_THRESHOLD = 25  # Celsius threshold to trigger cold mode
 # for testing. need to look back on Joburg temperature. Ideally switch should be daily
 PIR_THRESHOLD = 0.5   # Placeholder threshold for PIR sensor (if we were using it as a light sensor)
 STEP_DELAY = 0.002     # Speed of the motor (lower is faster). Each step will take 2 x 0.002 seconds.
-
+MOTOR_STEPS = 7500
 
 # HEATING_COEFFICIENT = 1.2 # Calibration constant. Degrees (C) to subtract per 1.0V of light reading.
 # Finding the actual value may require experimentation. Hard
@@ -82,12 +82,14 @@ while True:
 
         if current_temp > HOT_TEMP_THRESHOLD and not is_hot_mode: 
                 print(f"Hot Mode Triggered. Moving conveyor forward. \n Measured Outside Temp: {measured_temp}C. Adjusted Outside Temp: {current_temp}C. Photoresistor Value: {photoresistor.value}. \n Inside Temp : {bottom_sensor.temperature}C.")
-                move_motor(steps=200, direction_forward=True) # 200 steps = 1 revolution for Nema 17
+                move_motor(steps=MOTOR_STEPS, direction_forward=True) # 200 steps = 1 revolution for Nema 17
+                print("Rotation complete.")
                 is_hot_mode = True
 
         elif current_temp < COLD_TEMP_THRESHOLD and is_hot_mode:
                 print(f"Cold Mode Triggered. Moving conveyor backward. \n Measured Outside Temp: {measured_temp}C. Adjusted Outside Temp: {current_temp}C. Photoresistor Value: {photoresistor.value}. \n Inside Temp : {bottom_sensor.temperature}C.")
-                move_motor(steps=200, direction_forward=False) # Move in reverse
+                move_motor(steps=MOTOR_STEPS, direction_forward=False) # Move in reverse
+                print("Rotation complete.")
                 is_hot_mode = False
 
         else:
