@@ -20,10 +20,10 @@ CONTINUOUS_MODE = False # if true, spin continuously.
 
 # ---------------- PIN SETUP ---------------- #
 # 1. AM2320 Sensor Setup (I2C)
-i2c_1 = busio.I2C(board.GP17, board.GP16)
+i2c_1 = busio.I2C(board.GP17, board.GP16) # i2c0
 top_sensor = adafruit_am2320.AM2320(i2c_1)
 
-i2c_2 = busio.I2C(board.GP21, board.GP20)
+i2c_2 = busio.I2C(board.GP19, board.GP18) #i2c1
 bottom_sensor = adafruit_am2320.AM2320(i2c_2)
 
 
