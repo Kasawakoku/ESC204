@@ -18,8 +18,12 @@ STEP_DELAY = 0.002     # Speed of the motor (lower is faster). Each step will ta
 
 # ---------------- PIN SETUP ---------------- #
 # 1. AM2320 Sensor Setup (I2C)
-i2c = busio.I2C(board.GP17, board.GP16)
-sensor = adafruit_am2320.AM2320(i2c)
+i2c_1 = busio.I2C(board.GP17, board.GP16)
+top_sensor = adafruit_am2320.AM2320(i2c_1)
+
+i2c_2 = busio.I2C(board.GP21, board.GP20)
+bottom_sensor = adafruit_am2320.AM2320(i2c_2)
+
 
 
 # 2. TMC2209 Stepper Driver Setup
@@ -68,7 +72,8 @@ is_hot_mode = True
 while True:
     try:
         # 1. Read Sensor Data
-        current_temp = sensor.temperature
+        current_temp = top_sensor.temperature
+        measured_temp = current_temp
         current_temp += (photoresistor.value/(-2500)+8) #temperature adjustment to account for the effect of sunlight exposure on the temperature of the material
         #under the current conversion, when it is ambiant indoor birhgtness (simulating average day temp) the temperaturewill rise by ~5 degrees. When the resister is covered (simulating night) the temperature will rise by 0C
         pir_value = pir.value
@@ -76,20 +81,20 @@ while True:
         
 
         if current_temp > HOT_TEMP_THRESHOLD and not is_hot_mode: 
-                print(f"Hot Mode Triggered: Temp: {current_temp}C. PIR Value: {pir_value}. Moving conveyor forward.")
+                print(f"Hot Mode Triggered. Moving conveyor forward. \n Measured Outside Temp: {measured_temp}C. Adjusted Outside Temp: {current_temp}C. Photoresistor Value: {photoresistor.value}. \n Inside Temp : {bottom_sensor.temperature}C.")
                 move_motor(steps=200, direction_forward=True) # 200 steps = 1 revolution for Nema 17
                 is_hot_mode = True
 
         elif current_temp < COLD_TEMP_THRESHOLD and is_hot_mode:
-                print(f"Cold Mode Triggered: Temp: {current_temp}C. PIR Value: {pir_value}. Moving conveyor backward.")
+                print(f"Cold Mode Triggered. Moving conveyor backward. \n Measured Outside Temp: {measured_temp}C. Adjusted Outside Temp: {current_temp}C. Photoresistor Value: {photoresistor.value}. \n Inside Temp : {bottom_sensor.temperature}C.")
                 move_motor(steps=200, direction_forward=False) # Move in reverse
                 is_hot_mode = False
 
         else:
             if is_hot_mode:
-                print(f"Hot Mode: No mode change. Current Temp: {current_temp}C. PIR Value: {pir_value}. Photoresistor Value: {photoresistor.value}.")
+                print(f"Hot Mode: No mode change. \n Measured Outside Temp: {measured_temp}C. Adjusted Outside Temp: {current_temp}C. Photoresistor Value: {photoresistor.value}. \n Inside Temp : {bottom_sensor.temperature}C.")
             else:
-                print(f"Cold Mode: No mode change. Current Temp: {current_temp}C. PIR Value: {pir_value}. Photoresistor Value: {photoresistor.value}.")
+                print(f"Cold Mode: No mode change. \n Measured Outside Temp: {measured_temp}C. Adjusted Outside Temp: {current_temp}C. Photoresistor Value: {photoresistor.value}. \n Inside Temp : {bottom_sensor.temperature}C.")
 
         time.sleep(5) # Pause to prevent overloading the CPU
         '''
