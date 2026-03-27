@@ -72,10 +72,13 @@ is_hot_mode = True
 # after switching modes, should only run once
 
 while True:
-    if CONTINUOUS_MODE:
+    if CONTINUOUS_MODE: # for testing
         print("Continuous Mode: Spinning conveyor indefinitely.")
         move_motor(steps=MOTOR_STEPS, direction_forward=True) # Spin forward continuously
         time.sleep(5) # Short pause to prevent CPU overload
+        move_motor(steps=MOTOR_STEPS, direction_forward=False) # Spin backwards continuously
+        time.sleep(5) # Short pause to prevent CPU overload
+
     else:
         try:
             # 1. Read Sensor Data
