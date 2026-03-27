@@ -13,6 +13,8 @@ PIR_THRESHOLD = 0.5   # Placeholder threshold for PIR sensor (if we were using i
 STEP_DELAY = 0.002     # Speed of the motor (lower is faster). Each step will take 2 x 0.002 seconds.
 MOTOR_STEPS = 7500
 
+CONTINUOUS_MODE = False # if true, spin continuously.
+
 # HEATING_COEFFICIENT = 1.2 # Calibration constant. Degrees (C) to subtract per 1.0V of light reading.
 # Finding the actual value may require experimentation. Hard
 
@@ -70,58 +72,63 @@ is_hot_mode = True
 # after switching modes, should only run once
 
 while True:
-    try:
-        # 1. Read Sensor Data
-        current_temp = top_sensor.temperature
-        measured_temp = current_temp
-        current_temp += (photoresistor.value/(-2500)+8) #temperature adjustment to account for the effect of sunlight exposure on the temperature of the material
-        #under the current conversion, when it is ambiant indoor birhgtness (simulating average day temp) the temperaturewill rise by ~5 degrees. When the resister is covered (simulating night) the temperature will rise by 0C
-        pir_value = pir.value
-        #pir_value = None #for without pir testing
-        
+    if CONTINUOUS_MODE:
+        print("Continuous Mode: Spinning conveyor indefinitely.")
+        move_motor(steps=MOTOR_STEPS, direction_forward=True) # Spin forward continuously
+        time.sleep(5) # Short pause to prevent CPU overload
+    else:
+        try:
+            # 1. Read Sensor Data
+            current_temp = top_sensor.temperature
+            measured_temp = current_temp
+            current_temp += (photoresistor.value/(-2500)+8) #temperature adjustment to account for the effect of sunlight exposure on the temperature of the material
+            #under the current conversion, when it is ambiant indoor birhgtness (simulating average day temp) the temperaturewill rise by ~5 degrees. When the resister is covered (simulating night) the temperature will rise by 0C
+            pir_value = pir.value
+            #pir_value = None #for without pir testing
+            
 
-        if current_temp > HOT_TEMP_THRESHOLD and not is_hot_mode: 
-                print(f"Hot Mode Triggered. Moving conveyor forward. \n Measured Outside Temp: {measured_temp}C. Adjusted Outside Temp: {current_temp}C. Photoresistor Value: {photoresistor.value}. \n Inside Temp : {bottom_sensor.temperature}C.")
-                move_motor(steps=MOTOR_STEPS, direction_forward=True) # 200 steps = 1 revolution for Nema 17
-                print("Rotation complete.")
-                is_hot_mode = True
+            if current_temp > HOT_TEMP_THRESHOLD and not is_hot_mode: 
+                    print(f"Hot Mode Triggered. Moving conveyor forward. \n Measured Outside Temp: {measured_temp}C. Adjusted Outside Temp: {current_temp}C. Photoresistor Value: {photoresistor.value}. \n Inside Temp : {bottom_sensor.temperature}C.")
+                    move_motor(steps=MOTOR_STEPS, direction_forward=True) # 200 steps = 1 revolution for Nema 17
+                    print("Rotation complete.")
+                    is_hot_mode = True
 
-        elif current_temp < COLD_TEMP_THRESHOLD and is_hot_mode:
-                print(f"Cold Mode Triggered. Moving conveyor backward. \n Measured Outside Temp: {measured_temp}C. Adjusted Outside Temp: {current_temp}C. Photoresistor Value: {photoresistor.value}. \n Inside Temp : {bottom_sensor.temperature}C.")
-                move_motor(steps=MOTOR_STEPS, direction_forward=False) # Move in reverse
-                print("Rotation complete.")
-                is_hot_mode = False
+            elif current_temp < COLD_TEMP_THRESHOLD and is_hot_mode:
+                    print(f"Cold Mode Triggered. Moving conveyor backward. \n Measured Outside Temp: {measured_temp}C. Adjusted Outside Temp: {current_temp}C. Photoresistor Value: {photoresistor.value}. \n Inside Temp : {bottom_sensor.temperature}C.")
+                    move_motor(steps=MOTOR_STEPS, direction_forward=False) # Move in reverse
+                    print("Rotation complete.")
+                    is_hot_mode = False
 
-        else:
-            if is_hot_mode:
-                print(f"Hot Mode: No mode change. \n Measured Outside Temp: {measured_temp}C. Adjusted Outside Temp: {current_temp}C. Photoresistor Value: {photoresistor.value}. \n Inside Temp : {bottom_sensor.temperature}C.")
             else:
-                print(f"Cold Mode: No mode change. \n Measured Outside Temp: {measured_temp}C. Adjusted Outside Temp: {current_temp}C. Photoresistor Value: {photoresistor.value}. \n Inside Temp : {bottom_sensor.temperature}C.")
+                if is_hot_mode:
+                    print(f"Hot Mode: No mode change. \n Measured Outside Temp: {measured_temp}C. Adjusted Outside Temp: {current_temp}C. Photoresistor Value: {photoresistor.value}. \n Inside Temp : {bottom_sensor.temperature}C.")
+                else:
+                    print(f"Cold Mode: No mode change. \n Measured Outside Temp: {measured_temp}C. Adjusted Outside Temp: {current_temp}C. Photoresistor Value: {photoresistor.value}. \n Inside Temp : {bottom_sensor.temperature}C.")
 
-        time.sleep(5) # Pause to prevent overloading the CPU
-        '''
-        we are not using this....
-        if is_day_mode:
-            # Day Mode Behavior
-            if current_temp > TEMP_THRESHOLD: # Swapped the trigger to be temperature-based
-                print(f"Day Mode: Light detected! Temp: {current_temp}C. Moving conveyor forward.")
-                move_motor(steps=200, direction_forward=True) # 200 steps = 1 revolution for Nema 17
+            time.sleep(5) # Pause to prevent overloading the CPU
+            '''
+            we are not using this....
+            if is_day_mode:
+                # Day Mode Behavior
+                if current_temp > TEMP_THRESHOLD: # Swapped the trigger to be temperature-based
+                    print(f"Day Mode: Light detected! Temp: {current_temp}C. Moving conveyor forward.")
+                    move_motor(steps=200, direction_forward=True) # 200 steps = 1 revolution for Nema 17
+                else:
+                    pass # Waiting for temperature trigger
+                    
             else:
-                pass # Waiting for temperature trigger
-                
-        else:
-            # Night Mode Behavior
-            if current_temp > TEMP_THRESHOLD:
-                print(f"Night Mode: It is dark. Temp: {current_temp}C. Moving conveyor slowly.")
-                # Maybe change speed or distance for night mode
-                STEP_DELAY = 0.005 # slower
-                move_motor(steps=100, direction_forward=False) # Reverse direction?
-                STEP_DELAY = 0.002 # reset speed
-        '''
+                # Night Mode Behavior
+                if current_temp > TEMP_THRESHOLD:
+                    print(f"Night Mode: It is dark. Temp: {current_temp}C. Moving conveyor slowly.")
+                    # Maybe change speed or distance for night mode
+                    STEP_DELAY = 0.005 # slower
+                    move_motor(steps=100, direction_forward=False) # Reverse direction?
+                    STEP_DELAY = 0.002 # reset speed
+            '''
 
-        
+            
 
-    except Exception as e:
-        # The AM2320 sometimes throws read errors, so we catch them to prevent crashes
-        print(f"Sensor read error: {e}")
-        time.sleep(2)
+        except Exception as e:
+            # The AM2320 sometimes throws read errors, so we catch them to prevent crashes
+            print(f"Sensor read error: {e}")
+            time.sleep(2)
