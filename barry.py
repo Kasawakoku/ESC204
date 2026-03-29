@@ -86,7 +86,8 @@ while True:
             outside_temp = top_sensor.temperature
             measured_outside_temp = outside_temp
             
-            outside_temp += (photoresistor_value/(-2500)+8) 
+            #outside_temp += (photoresistor_value/(-2500)+8) 
+            # we are no longer using this because as Ryan and Nour pointed out, the temperature resister will already be affected by the sunlight, so we are effectively double counting the effect of sunlight on temperature.
             # Temperature adjustment to account for the effect of sunlight exposure on the temperature of the material
             # Under the current conversion, when it is ambient indoor birhgtness (simulating average day conditions) the temperature will rise by ~5 degrees.
             # When the resister is covered (simulating night) the temperature will rise by 0C
