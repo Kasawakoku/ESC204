@@ -6,12 +6,15 @@ import adafruit_am2320
 import analogio
 
 # ---------------- CONFIGURATION ---------------- #
-HOT_TEMP_THRESHOLD = 30  # Celsius threshold to trigger hot mode 
-COLD_TEMP_THRESHOLD = 25  # Celsius threshold to trigger cold mode
-# for testing. need to look back on Joburg temperature. Ideally switch should be daily
+HOT_TEMP_THRESHOLD = 24  # Internal Celsius threshold to trigger hot mode 
+COLD_TEMP_THRESHOLD = 21  # Internal Celsius threshold to trigger cold mode
 PIR_THRESHOLD = 0.5   # Placeholder threshold for PIR sensor (if we were using it as a light sensor)
 STEP_DELAY = 0.002     # Speed of the motor (lower is faster). Each step will take 2 x 0.002 seconds.
-MOTOR_STEPS = 7500
+MOTOR_STEPS = 7500 # Steps to turn from bottom to top empirically determined
+
+DAY_LIGHT_THRESHOLD = 10000
+NIGHT_LIGHT_THRESHOLD = 15000
+
 
 CONTINUOUS_MODE = False # if true, spin continuously.
 
@@ -64,6 +67,11 @@ print("Starting Conveyor System...")
 
 # Start in hot mode
 is_hot_mode = True
+# means we are exposing the paraffin wax
+should_be_hot_mode = True
+
+is_day = True
+
 # Rely on temperature
 # If temperature value is sus (eg. extreme value, error, hasnt change a long time, prevent reflections?)
 # try to do light sensor as backup.
@@ -72,43 +80,116 @@ is_hot_mode = True
 # after switching modes, should only run once
 
 while True:
-    if CONTINUOUS_MODE: # for testing
+    if CONTINUOUS_MODE: # for verification testing
         print("Continuous Mode: Spinning conveyor indefinitely.")
-        move_motor(steps=MOTOR_STEPS, direction_forward=True) # Spin forward continuously
-        time.sleep(5) # Short pause to prevent CPU overload
+        
         move_motor(steps=MOTOR_STEPS, direction_forward=False) # Spin backwards continuously
         time.sleep(5) # Short pause to prevent CPU overload
 
     else:
         try:
             # 1. Read Sensor Data
-            current_temp = top_sensor.temperature
-            measured_temp = current_temp
-            current_temp += (photoresistor.value/(-2500)+8) #temperature adjustment to account for the effect of sunlight exposure on the temperature of the material
+            outside_temp = top_sensor.temperature
+            measured_outside_temp = outside_temp
+            photoresistor_value = photoresistor.value
+            outside_temp += (photoresistor_value/(-2500)+8) #temperature adjustment to account for the effect of sunlight exposure on the temperature of the material
             #under the current conversion, when it is ambiant indoor birhgtness (simulating average day temp) the temperaturewill rise by ~5 degrees. When the resister is covered (simulating night) the temperature will rise by 0C
             pir_value = pir.value
             #pir_value = None #for without pir testing
+            inside_temp = bottom_sensor.temperature
+
+            print(f"Photoresistor Value: {photoresistor.value}.")
+
+            if photoresistor_value > NIGHT_LIGHT_THRESHOLD and is_day:
+                is_day = False
+                print("No daylight detected. Changing to Night state.")
+            elif photoresistor_value < DAY_LIGHT_THRESHOLD and not is_day:
+                is_day = True
+                print("Daylight detected. Changing to Day state.")
+
+
+            else:
+                if is_day:
+                    print("Daylight detected. No change in state.")
+                else:
+                    print("No daylight detected. No change in state.")
+
+
+
+            print(f"Measured Outside Temp: {measured_outside_temp}C. Adjusted Outside Temp: {outside_temp}C. Inside Temp : {inside_temp}C.")
+
+            if inside_temp < COLD_TEMP_THRESHOLD : 
+                # need heating
+                if outside_temp > inside_temp or is_day:
+                    # can get heat from either hot outside air or the sun
+                    print("DEMAND (HEAT): Harvesting environmental heat.")
+                    should_be_hot_mode = True
+                else:
+                    print("DEMAND (HEAT): Cold & dark outside. Trapping heat.")
+                    should_be_hot_mode = False
+
+            elif inside_temp > HOT_TEMP_THRESHOLD:
+                # need cooling
+                if outside_temp < inside_temp and not is_day:
+                    # need both cool outside air and darkness to effectively cool, so only cool if both are present. 
+                    print("DEMAND (COOL): Dumping heat to cool night sky.")
+                    should_be_hot_mode = False
+                else:
+                    print("DEMAND (COOL): Hot or sunny outside. Shielding house.")
+                    should_be_hot_mode = True
+
+            else:
+                # DEMAND: Satisfied (21C to 24C)
+                # Play it very safe since we don't know the season. "Opportunity Zone"
+                if is_day and outside_temp < HOT_TEMP_THRESHOLD:
+                    # It is sunny and the air won't overheat us. Charge the battery!
+                    print("OPPORTUNITY: Harvesting sun for the future.")
+                    should_be_hot_mode = True
+                else:
+                    # It is dark, raining, or hot. Lock down the comfortable house.
+                    print("OPPORTUNITY: No clear advantage. Locking down.")
+                    should_be_hot_mode = False
+
+            if should_be_hot_mode and not is_hot_mode:
+                    print(f"Hot Mode Triggered. Moving conveyor forward.")
+                    move_motor(steps=MOTOR_STEPS, direction_forward=False) # 200 steps = 1 revolution for Nema 17. always move in reverse
+                    print("Rotation complete.")
+                    is_hot_mode = True
+            elif not should_be_hot_mode and is_hot_mode:
+                    print(f"Cold Mode Triggered. Moving conveyor backward.")
+                    move_motor(steps=MOTOR_STEPS, direction_forward=False) # Move in reverse
+                    print("Rotation complete.")
+                    is_hot_mode = False
+            else:
+                if is_hot_mode:
+                    print(f"Hot Mode: No mode change.")
+                else:
+                    print(f"Cold Mode: No mode change.")
+                    
+
+            '''
             
 
-            if current_temp > HOT_TEMP_THRESHOLD and not is_hot_mode: 
-                    print(f"Hot Mode Triggered. Moving conveyor forward. \n Measured Outside Temp: {measured_temp}C. Adjusted Outside Temp: {current_temp}C. Photoresistor Value: {photoresistor.value}. \n Inside Temp : {bottom_sensor.temperature}C.")
+            if outside_temp > HOT_TEMP_THRESHOLD and not is_hot_mode: 
+                    print(f"Hot Mode Triggered. Moving conveyor forward. \n Measured Outside Temp: {measured_outside_temp}C. Adjusted Outside Temp: {outside_temp}C. Photoresistor Value: {photoresistor.value}. \n Inside Temp : {inside_temp}C.")
                     move_motor(steps=MOTOR_STEPS, direction_forward=True) # 200 steps = 1 revolution for Nema 17
                     print("Rotation complete.")
                     is_hot_mode = True
 
-            elif current_temp < COLD_TEMP_THRESHOLD and is_hot_mode:
-                    print(f"Cold Mode Triggered. Moving conveyor backward. \n Measured Outside Temp: {measured_temp}C. Adjusted Outside Temp: {current_temp}C. Photoresistor Value: {photoresistor.value}. \n Inside Temp : {bottom_sensor.temperature}C.")
+            elif outside_temp < COLD_TEMP_THRESHOLD and is_hot_mode:
+                    print(f"Cold Mode Triggered. Moving conveyor backward. \n Measured Outside Temp: {measured_outside_temp}C. Adjusted Outside Temp: {outside_temp}C. Photoresistor Value: {photoresistor.value}. \n Inside Temp : {inside_temp}C.")
                     move_motor(steps=MOTOR_STEPS, direction_forward=False) # Move in reverse
                     print("Rotation complete.")
                     is_hot_mode = False
 
             else:
                 if is_hot_mode:
-                    print(f"Hot Mode: No mode change. \n Measured Outside Temp: {measured_temp}C. Adjusted Outside Temp: {current_temp}C. Photoresistor Value: {photoresistor.value}. \n Inside Temp : {bottom_sensor.temperature}C.")
+                    print(f"Hot Mode: No mode change. \n Measured Outside Temp: {measured_outside_temp}C. Adjusted Outside Temp: {outside_temp}C. Photoresistor Value: {photoresistor.value}. \n Inside Temp : {inside_temp}C.")
                 else:
-                    print(f"Cold Mode: No mode change. \n Measured Outside Temp: {measured_temp}C. Adjusted Outside Temp: {current_temp}C. Photoresistor Value: {photoresistor.value}. \n Inside Temp : {bottom_sensor.temperature}C.")
+                    print(f"Cold Mode: No mode change. \n Measured Outside Temp: {measured_outside_temp}C. Adjusted Outside Temp: {outside_temp}C. Photoresistor Value: {photoresistor.value}. \n Inside Temp : {inside_temp}C.")
 
-            time.sleep(5) # Pause to prevent overloading the CPU
+            
+            '''
             '''
             we are not using this....
             if is_day_mode:
@@ -128,6 +209,8 @@ while True:
                     move_motor(steps=100, direction_forward=False) # Reverse direction?
                     STEP_DELAY = 0.002 # reset speed
             '''
+
+            time.sleep(5) # Pause to prevent overloading the CPU
 
             
 
