@@ -28,18 +28,6 @@
             gap: 8px; 
             box-sizing: border-box;
         }
-        .photo-placeholder { 
-            background: #f1f5f9 !important; 
-            border: 2px dashed #cbd5e1 !important; 
-            display: flex; 
-            flex-direction: column;
-            align-items: center; 
-            justify-content: center; 
-            text-align: center; 
-            color: #475569; 
-            font-weight: 600; 
-            border-radius: 8px; 
-        }
         .callout { 
             background: #f8fafc !important; 
             padding: 8px; 
@@ -51,43 +39,25 @@
         .tag-soft { background: #ffc5b2 !important; color: #ff3002 !important; }
         .tag-stakeholder { background: #f1f5f9 !important; color: #475569 !important; border: 1px solid #cbd5e1; }
         
-        .placeholder-instruction {
-            font-size: 0.6rem;
-            font-style: italic;
-            color: #64748b;
-            margin-top: 4px;
-            max-width: 80%;
-        }
     @media print {
-    /* Keeps your colors */
-    * {
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
+        * {
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+            backdrop-filter: none !important; 
+            -webkit-backdrop-filter: none !important;
+        }
+        .canvas {
+            page-break-inside: avoid !important;
+            margin: 0 !important;
+        }
     }
-    
-    /* Kills the blur bug */
-    * {
-        backdrop-filter: none !important; 
-        -webkit-backdrop-filter: none !important;
-    }
-    
-    /* Stops the page slicing */
-    .canvas {
-        page-break-inside: avoid !important;
-        margin: 0 !important;
-    }
-
-}
     </style>
-
-    
 </head>
 <body>
 
 <div class="canvas mx-auto">
     
-    <!-- HEADER & CONTEXT -->
-    <header class="flex justify-between items-start border-b-2 border-blue-600 pb-4">
+    <header class="flex justify-between items-start border-b-2 border-blue-600 pb-3 shrink-0">
         <div>
             <h1 class="text-3xl font-black tracking-tight text-blue-900 leading-none">BARRY</h1>
             <p class="text-sm font-bold text-blue-600 uppercase tracking-widest mt-1">Smart Roof System Prototype</p>
@@ -100,8 +70,7 @@
         </div>
     </header>
 
-    <!-- SECTION 1: PROTOTYPE vs CONCEPT -->
-    <div class="grid grid-cols-12 gap-4">
+    <div class="grid grid-cols-12 gap-4 shrink-0 mt-1">
         <div class="col-span-4 space-y-2">
             <h2 class="text-xs font-black text-blue-900 uppercase tracking-widest mb-2.5 border-b border-slate-200 pb-1">Design Realization</h2>
             <div class="text-[0.65rem] border border-slate-200 p-2 rounded bg-slate-50">
@@ -123,14 +92,10 @@
             </div>
         </div>
 
-        <!-- MAIN PHOTO AREA -->
-        <div class="col-span-8 relative h-full">
-            <div class="w-full h-full min-h-[16rem] rounded-lg overflow-hidden relative border-2 border-slate-200 shadow-sm bg-slate-100">
-                <!-- Using the same filename automatically applies your newly uploaded image -->
-                <img src="Main Design Picture.jpg" alt="Main Prototype" class="w-full h-full object-cover object-center">
+        <div class="col-span-8 relative h-full min-h-[14rem]">
+            <div class="relative w-full h-full rounded-lg overflow-hidden border-2 border-slate-200 shadow-sm bg-slate-100">
+                <img src="Main Design Picture.jpg" alt="Main Prototype" class="absolute inset-0 w-full h-full object-cover object-center">
                 
-                <!-- Component Labels -->
-                <!-- Electrical (Blue) -->
                 <div class="absolute top-[60%] left-[46%] flex items-center">
                     <div class="w-1.5 h-1.5 bg-blue-500 rounded-full relative z-10 shadow-sm"></div>
                     <div class="w-6 h-[2px] bg-blue-500 -ml-0.5"></div>
@@ -152,7 +117,6 @@
                     <div class="bg-white/95 backdrop-blur-[2px] border border-slate-200 border-l-[3px] border-l-blue-500 px-1.5 py-0.5 text-[8px] font-bold text-blue-800 rounded shadow-sm whitespace-nowrap shadow-md -ml-0.5">Motor</div>
                 </div>
                 
-                <!-- Mechanical (Green) -->
                 <div class="absolute top-[40%] right-[70%] flex items-center">
                     <div class="bg-white/95 backdrop-blur-[2px] border border-slate-200 border-r-[3px] border-r-green-500 px-1.5 py-0.5 text-[8px] font-bold text-green-800 rounded shadow-sm whitespace-nowrap shadow-md -mr-0.5">3mm Plywood Treads</div>
                     <div class="w-6 h-[2px] bg-green-500 -mr-0.5"></div>
@@ -165,267 +129,230 @@
                     <div class="w-1.5 h-1.5 bg-green-500 rounded-full relative z-10 shadow-sm"></div>
                 </div>
 
-                <!-- Magnification Context Box (Adjusted for the new photo layout) -->
-                <div class="absolute bottom-[24%] right-[14%] w-24 h-24 border-[3px] border-blue-500 rounded">
-                    <span class="absolute -top-5 left-0 bg-blue-600 text-white text-[8px] px-1.5 py-0.5 font-bold rounded shadow tracking-wider">MAGNIFIED AREA ▼</span>
-                </div>
-
-                <!-- Sensor Zoom Inset -->
                 <div class="absolute top-[76%] left-[40%] z-20 shadow-md rounded-full">
                     <div class="w-20 h-20 rounded-full border-[3px] border-blue-500 overflow-hidden bg-slate-100">
                         <img src="Sensors Diagram.jpg" alt="Sensors Detail" class="w-full h-full object-cover origin-[43%_60%] scale-[7]">
                     </div>
                     
-                    <!-- Photo Resistor Label (Pointing Right) -->
                     <div class="absolute top-[26%] left-[44%] flex items-center z-30">
                         <div class="w-1.5 h-1.5 bg-blue-500 rounded-full relative z-10 shadow-sm"></div>
                         <div class="w-5 h-[2px] bg-blue-500 -ml-0.5"></div>
                         <div class="bg-white/95 backdrop-blur-[2px] border border-slate-200 border-l-[3px] border-l-blue-500 px-1.5 py-0.5 text-[8px] font-bold text-blue-800 rounded shadow-sm whitespace-nowrap shadow-md -ml-0.5">Photo Resistor</div>
                     </div>
                     
-                    <!-- Thermistor Label (Pointing Right) -->
                     <div class="absolute top-[50%] left-[52%] flex items-center z-30">
                         <div class="w-1.5 h-1.5 bg-blue-500 rounded-full relative z-10 shadow-sm"></div>
                         <div class="w-5 h-[2px] bg-blue-500 -ml-0.5"></div>
                         <div class="bg-white/95 backdrop-blur-[2px] border border-slate-200 border-l-[3px] border-l-blue-500 px-1.5 py-0.5 text-[8px] font-bold text-blue-800 rounded shadow-sm whitespace-nowrap shadow-md -ml-0.5">Thermistor</div>
                     </div>
                 </div>
-            </div>
-            
-            <!-- KEY FEATURE CALLOUTS -->
-            <div class="absolute top-2 left-2 callout border-l-[4px] border-l-green-500 shadow-md w-36 border border-slate-200 bg-white/95 backdrop-blur-[2px]">
-                <div class="flex justify-between items-start">
-                    <span class="tag tag-mech">Mechanical</span>
-                    <div class="flex gap-1 mt-0.5">
-                        <div class="w-2 h-2 bg-orange-500 rounded-[1px]" title="Efficiency & Noise"></div>
-                        <div class="w-2 h-2 bg-green-700 rounded-[1px]" title="Autonomy Outcome"></div>
+                
+                <div class="absolute top-2 left-2 callout border-l-[4px] border-l-green-500 shadow-md w-36 border border-slate-200 bg-white/95 backdrop-blur-[2px]">
+                    <div class="flex justify-between items-start">
+                        <span class="tag tag-mech">Mechanical</span>
+                        <div class="flex gap-1 mt-0.5">
+                            <div class="w-2 h-2 bg-orange-500 rounded-[1px]" title="Efficiency & Noise"></div>
+                            <div class="w-2 h-2 bg-green-700 rounded-[1px]" title="Autonomy Outcome"></div>
+                        </div>
                     </div>
+                    <p class="font-bold mt-1 text-[11px]">Timing Belt & Treads</p>
+                    <p class="text-[9px] leading-tight text-slate-600">Iterated timing belt thickness ensures durability for long-term use (Stakeholder: Operators).</p>
                 </div>
-                <p class="font-bold mt-1 text-[11px]">Timing Belt & Treads</p>
-                <p class="text-[9px] leading-tight text-slate-600">Iterated timing belt thickness ensures durability for long-term use (Stakeholder: Operators).</p>
-            </div>
-            <div class="absolute bottom-2 left-2 callout border-l-[4px] border-l-blue-500 shadow-md w-36 border border-slate-200 bg-white/95 backdrop-blur-[2px]">
-                <div class="flex justify-between items-start">
-                    <span class="tag tag-elec">Electrical</span>
-                    <div class="flex gap-1 mt-0.5">
-                        <div class="w-2 h-2 bg-blue-500 rounded-[1px]" title="Thermal Control"></div>
-                        <div class="w-2 h-2 bg-purple-500 rounded-[1px]" title="Responsiveness"></div>
-                        <div class="w-2 h-2 bg-green-700 rounded-[1px]" title="Autonomy Outcome"></div>
+                <div class="absolute bottom-2 left-2 callout border-l-[4px] border-l-blue-500 shadow-md w-36 border border-slate-200 bg-white/95 backdrop-blur-[2px]">
+                    <div class="flex justify-between items-start">
+                        <span class="tag tag-elec">Electrical</span>
+                        <div class="flex gap-1 mt-0.5">
+                            <div class="w-2 h-2 bg-blue-500 rounded-[1px]" title="Thermal Control"></div>
+                            <div class="w-2 h-2 bg-purple-500 rounded-[1px]" title="Responsiveness"></div>
+                            <div class="w-2 h-2 bg-green-700 rounded-[1px]" title="Autonomy Outcome"></div>
+                        </div>
                     </div>
+                    <p class="font-bold mt-1 text-[11px]">Autonomous Control</p>
+                    <p class="text-[9px] leading-tight text-slate-600">Reduces manual intervention for busy building occupants.</p>
                 </div>
-                <p class="font-bold mt-1 text-[11px]">Autonomous Control</p>
-                <p class="text-[9px] leading-tight text-slate-600">Reduces manual intervention for busy building occupants.</p>
-            </div>
-            <div class="absolute top-2 right-2 callout border-l-[4px] border-l-red-400 shadow-md w-36 border border-slate-200 bg-white/95 backdrop-blur-[2px]">
-                <div class="flex justify-between items-start">
-                    <span class="tag tag-soft">Software</span>
-                    <div class="flex gap-1 mt-0.5">
-                        <div class="w-2 h-2 bg-blue-500 rounded-[1px]" title="Thermal Control"></div>
-                        <div class="w-2 h-2 bg-purple-500 rounded-[1px]" title="Responsiveness"></div>
+                <div class="absolute top-2 right-2 callout border-l-[4px] border-l-red-400 shadow-md w-36 border border-slate-200 bg-white/95 backdrop-blur-[2px]">
+                    <div class="flex justify-between items-start">
+                        <span class="tag tag-soft">Software</span>
+                        <div class="flex gap-1 mt-0.5">
+                            <div class="w-2 h-2 bg-blue-500 rounded-[1px]" title="Thermal Control"></div>
+                            <div class="w-2 h-2 bg-purple-500 rounded-[1px]" title="Responsiveness"></div>
+                        </div>
                     </div>
+                    <p class="font-bold mt-1 text-[11px]">Logic Thresholds</p>
+                    <p class="text-[9px] leading-tight text-slate-600">Pico micro-controller evaluates 21°C/24°C thermal data to precisely actuate the motor.</p>
                 </div>
-                <p class="font-bold mt-1 text-[11px]">Logic Thresholds</p>
-                <p class="text-[9px] leading-tight text-slate-600">Pico micro-controller evaluates 21°C/24°C thermal data to precisely actuate the motor.</p>
             </div>
         </div>
     </div>
 
-    <!-- SECTION 2: MAGNIFIED TECHNICAL DEEP-DIVE -->
-    <div class="bg-slate-50 border border-slate-200 p-2.5 rounded-lg relative mt-1">
-        <h3 class="text-xs font-black text-blue-900 uppercase tracking-widest mb-2.5 border-b border-slate-200 pb-1">Magnified Area: Key Mechanical Design Features</h3>
-        <div class="grid grid-cols-12 gap-3 items-center">
-            
-            <!-- Left Labels -->
-            <div class="col-span-4 flex flex-col gap-2">
-                <div class="bg-white p-2 border border-blue-200 border-r-4 border-r-blue-500 rounded shadow-sm relative">
-                    <span class="absolute -right-3 top-1/2 -translate-y-1/2 bg-blue-600 text-white w-4 h-4 flex items-center justify-center rounded-full text-[9px] font-bold z-10 shadow-md">1</span>
-                    <p class="text-[0.65rem] font-bold text-slate-800">Metal Axle Upgrade</p>
-                    <p class="text-[0.55rem] text-slate-600 mt-0.5 leading-tight">Iterated from wooden axles to withstand the high torque from the NEMA 17 stepper motor, ensuring system durability.</p>
-                </div>
-                <div class="bg-white p-2 border border-blue-200 border-r-4 border-r-blue-500 rounded shadow-sm relative">
-                    <span class="absolute -right-3 top-1/2 -translate-y-1/2 bg-blue-600 text-white w-4 h-4 flex items-center justify-center rounded-full text-[9px] font-bold z-10 shadow-md">2</span>
-                    <p class="text-[0.65rem] font-bold text-slate-800">2.5mm TPU Timing Belt</p>
-                    <p class="text-[0.55rem] text-slate-600 mt-0.5 leading-tight">Custom printed with 50% infill to balance pulley flexibility with structural thickness for load-bearing capabilities.</p>
-                </div>
-            </div>
-
-            <!-- Center Image with Pins -->
-            <div class="col-span-4 relative rounded-lg border-2 border-blue-300 overflow-hidden h-[140px] shadow-md bg-slate-200">
-                <img src="Close up Diagram of NEMA Motor and Rotating Frame.jpg" alt="Close up Detail" class="w-full h-full object-cover object-[50%_65%]">
-                
-                <!-- Pin 1: Axle/Pulley -->
-                <div class="absolute top-[62%] left-[53%] bg-blue-600 text-white w-4 h-4 flex items-center justify-center rounded-full text-[9px] font-bold shadow-[0_0_0_2px_rgba(255,255,255,0.8)] z-20">1</div>
-                
-                
-                <!-- Pin 2: Belt under pulley -->
-                <div class="absolute bottom-[8%] left-[20%] bg-blue-600 text-white w-4 h-4 flex items-center justify-center rounded-full text-[9px] font-bold shadow-[0_0_0_2px_rgba(255,255,255,0.8)] z-20">2</div>
-                
-                <!-- Pin 3: Wire stitch on tread -->
-                <div class="absolute top-[3%] left-[32%] bg-blue-600 text-white w-4 h-4 flex items-center justify-center rounded-full text-[9px] font-bold shadow-[0_0_0_2px_rgba(255,255,255,0.8)] z-20">3</div>
-                
-                <!-- Pin 4: Drilled wood -->
-                <div class="absolute top-[20%] left-[18%] bg-blue-600 text-white w-4 h-4 flex items-center justify-center rounded-full text-[9px] font-bold shadow-[0_0_0_2px_rgba(255,255,255,0.8)] z-20">4</div>
-            </div>
-
-            <!-- Right Labels -->
-            <div class="col-span-4 flex flex-col gap-2">
-                <div class="bg-white p-2 border border-blue-200 border-l-4 border-l-blue-500 rounded shadow-sm relative">
-                    <span class="absolute -left-3 top-1/2 -translate-y-1/2 bg-blue-600 text-white w-4 h-4 flex items-center justify-center rounded-full text-[9px] font-bold z-10 shadow-md">3</span>
-                    <p class="text-[0.65rem] font-bold text-slate-800">Low-Profile Stitching</p>
-                    <p class="text-[0.55rem] text-slate-600 mt-0.5 leading-tight">Fishing wire knots are kept outside the belt to maximize contact patch and prevent tooth slippage on the pulleys.</p>
-                </div>
-                <div class="bg-white p-2 border border-blue-200 border-l-4 border-l-blue-500 rounded shadow-sm relative">
-                    <span class="absolute -left-3 top-1/2 -translate-y-1/2 bg-blue-600 text-white w-4 h-4 flex items-center justify-center rounded-full text-[9px] font-bold z-10 shadow-md">4</span>
-                    <p class="text-[0.65rem] font-bold text-slate-800">Drilled Wood Treads</p>
-                    <p class="text-[0.55rem] text-slate-600 mt-0.5 leading-tight">Drilled anchor holes into rigid wood treads after glue failed to bond with TPU.</p>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    <!-- SECTION 3: SYSTEM ARCHITECTURE & PERFORMANCE -->
-    <div class="grid grid-cols-12 gap-5 flex-grow mt-1">
+    <div class="grid grid-cols-12 gap-5 flex-grow mt-1 min-h-0">
         
-        <!-- OPPORTUNITY CONTEXT (RDP HOUSING) -->
-        <div class="col-span-5 flex flex-col">
+        <div class="col-span-4 flex flex-col h-full">
             <h2 class="text-[10px] font-bold uppercase text-blue-900 mb-1.5 tracking-wider leading-tight">Opportunity Context</h2>
-            <div class="relative rounded-lg border border-slate-200 shadow-sm flex-grow bg-slate-100 mt-6">
-                <!-- Wrap image to apply rounded clipping without clipping our lines/icons -->
-                <div class="absolute inset-0 rounded-lg overflow-hidden z-0">
-                    <img src="Johannesburg RDP Government Housing.jpg" alt="RDP Housing" class="w-full h-full object-cover object-[10%_50%]">
-                </div>
-                
-                <!-- Connecting Lines SVG -->
-                <svg class="absolute inset-0 w-full h-full pointer-events-none z-10" style="overflow: visible;">
-                    <!-- Person to Occupant (Blue) -->
-                    <line x1="15%" y1="-14" x2="15%" y2="15" stroke="#3b82f6" stroke-width="2" stroke-dasharray="3" />
-                    <!-- Flag to Policy (Orange) -->
-                    <line x1="85%" y1="-14" x2="85%" y2="15" stroke="#f97316" stroke-width="2" stroke-dasharray="3" />
-                    <!-- Tools to Operator (Purple) -->
-                    <line x1="50%" y1="-14" x2="50%" y2="55%" stroke="#a855f7" stroke-width="2" stroke-dasharray="3" />
-                    <line x1="50%" y1="55%" x2="15%" y2="55%" stroke="#a855f7" stroke-width="2" stroke-dasharray="3" />
-                    <line x1="15%" y1="55%" x2="15%" y2="90%" stroke="#a855f7" stroke-width="2" stroke-dasharray="3" />
-                </svg>
+            
+            <div class="relative rounded-lg border border-slate-200 shadow-sm flex-grow flex flex-col bg-slate-100 mt-6 min-h-0">
+                <div class="relative w-full h-[300px] shrink-0">
+                    <div class="absolute inset-0 rounded-t-lg overflow-hidden z-0">
+                        <img src="Johannesburg RDP Government Housing.jpg" alt="RDP Housing" class="w-full h-full object-cover object-[10%_50%] opacity-90">
+                    </div>
+                    
+                    <svg class="absolute inset-0 w-full h-full pointer-events-none z-10" style="overflow: visible;">
+                        <line x1="15%" y1="-14" x2="15%" y2="15" stroke="#3b82f6" stroke-width="2" stroke-dasharray="3" />
+                        <line x1="85%" y1="-14" x2="85%" y2="15" stroke="#f97316" stroke-width="2" stroke-dasharray="3" />
+                        <line x1="50%" y1="-14" x2="50%" y2="55%" stroke="#a855f7" stroke-width="2" stroke-dasharray="3" />
+                        <line x1="50%" y1="55%" x2="15%" y2="55%" stroke="#a855f7" stroke-width="2" stroke-dasharray="3" />
+                        <line x1="15%" y1="55%" x2="15%" y2="90%" stroke="#a855f7" stroke-width="2" stroke-dasharray="3" />
+                    </svg>
 
-                <!-- Icons above image -->
-                <div class="absolute -top-7 left-[15%] -translate-x-1/2 flex flex-col items-center z-20">
-                    <img src="person_png.png" alt="Occupant" class="w-7 h-7 object-contain bg-white rounded-full border-2 border-blue-400 p-1 shadow-sm">
-                </div>
-                <div class="absolute -top-7 left-[50%] -translate-x-1/2 flex flex-col items-center z-20">
-                    <img src="tools-png.png" alt="Operator" class="w-7 h-7 object-contain bg-white rounded-full border-2 border-purple-400 p-1 shadow-sm">
-                </div>
-                <div class="absolute -top-7 left-[85%] -translate-x-1/2 flex flex-col items-center z-20">
-                    <img src="Flag_of_South_Africa.svg" alt="Policy" class="w-7 h-7 object-contain bg-white rounded-full border-2 border-orange-400 p-1 shadow-sm">
-                </div>
-                
-                <!-- Color-Coded Stakeholder Tags on Image -->
-                <div class="absolute top-2 left-2 z-20 bg-white/95 backdrop-blur-[2px] border-l-[3px] border-l-blue-500 p-1.5 shadow-md rounded-r text-[8px] leading-tight max-w-[40%] flex flex-col gap-0.5">
-                    <div class="flex items-center gap-1">
-                        <img src="temperature_icon.png" alt="Thermal Needs" class="w-2.5 h-2.5 opacity-80">
-                        <span class="font-bold text-blue-800 uppercase">Johannesburg RDP Occupant</span>
+                    <div class="absolute -top-7 left-[15%] -translate-x-1/2 flex flex-col items-center z-20">
+                        <img src="person_png.png" alt="Occupant" class="w-7 h-7 object-contain bg-white rounded-full border-2 border-blue-400 p-1 shadow-sm">
                     </div>
-                    <span class="text-slate-700">Needs passive thermal regulation to maintain comfort during 10-15°C diurnal swings.</span>
+                    <div class="absolute -top-7 left-[50%] -translate-x-1/2 flex flex-col items-center z-20">
+                        <img src="tools-png.png" alt="Operator" class="w-7 h-7 object-contain bg-white rounded-full border-2 border-purple-400 p-1 shadow-sm">
+                    </div>
+                    <div class="absolute -top-7 left-[85%] -translate-x-1/2 flex flex-col items-center z-20">
+                        <img src="Flag_of_South_Africa.svg" alt="Policy" class="w-7 h-7 object-contain bg-white rounded-full border-2 border-orange-400 p-1 shadow-sm">
+                    </div>
+                    
+                    <div class="absolute top-2 left-2 z-20 bg-white/95 backdrop-blur-[2px] border-l-[3px] border-l-blue-500 p-1.5 shadow-md rounded-r text-[8px] leading-tight max-w-[40%] flex flex-col gap-0.5">
+                        <div class="flex items-center gap-1">
+                            <img src="temperature_icon.png" alt="Thermal Needs" class="w-2.5 h-2.5 opacity-80">
+                            <span class="font-bold text-blue-800 uppercase">Johannesburg RDP Occupant</span>
+                        </div>
+                        <span class="text-slate-700">Needs passive thermal regulation to maintain comfort.</span>
+                    </div>
+
+                    <div class="absolute top-2 right-2 z-20 bg-white/95 backdrop-blur-[2px] border-r-[3px] border-r-orange-500 p-1.5 shadow-md rounded-l text-[8px] leading-tight text-right max-w-[45%] flex flex-col gap-0.5 items-end">
+                        <div class="flex items-center gap-1">
+                            <span class="font-bold text-orange-800 uppercase">Policy Makers</span>
+                            <img src="policy_icon.png" alt="Policy Mandate" class="w-2.5 h-2.5 opacity-80">
+                        </div>
+                        <span class="text-slate-700">Mandates reduction in grid energy demand.</span>
+                    </div>
+                    
+                    <div class="absolute bottom-2 left-2 z-20 bg-white/95 backdrop-blur-[2px] border-l-[3px] border-l-purple-500 p-1.5 shadow-md rounded-r text-[8px] leading-tight max-w-[55%] flex flex-col gap-0.5">
+                        <div class="flex items-center gap-1">
+                            <img src="user icon.png" alt="Operator" class="w-2.5 h-2.5 opacity-80">
+                            <span class="font-bold text-purple-800 uppercase">Operator (Contractors)</span>
+                        </div>
+                        <span class="text-slate-700">Requires durable, low-maintenance systems.</span>
+                    </div>
                 </div>
 
-                <div class="absolute top-2 right-2 z-20 bg-white/95 backdrop-blur-[2px] border-r-[3px] border-r-orange-500 p-1.5 shadow-md rounded-l text-[8px] leading-tight text-right max-w-[45%] flex flex-col gap-0.5 items-end">
-                    <div class="flex items-center gap-1">
-                        <span class="font-bold text-orange-800 uppercase">Policy (South African Government)</span>
-                        <img src="policy_icon.png" alt="Policy Mandate" class="w-2.5 h-2.5 opacity-80">
-                    </div>
-                    <span class="text-slate-700">Mandates reduction in building grid energy demand.</span>
-                </div>
-                
-                <div class="absolute bottom-2 left-2 z-20 bg-white/95 backdrop-blur-[2px] border-l-[3px] border-l-purple-500 p-1.5 shadow-md rounded-r text-[8px] leading-tight max-w-[60%] flex flex-col gap-0.5">
-                    <div class="flex items-center gap-1">
-                        <img src="user icon.png" alt="Operator" class="w-2.5 h-2.5 opacity-80">
-                        <span class="font-bold text-purple-800 uppercase">Operator (Companies and Contractors)</span>
-                    </div>
-                    <span class="text-slate-700">Requires durable, low-maintenance systems.</span>
+                <div class="bg-white p-2.5 text-[0.6rem] text-slate-700 space-y-1.5 flex-grow rounded-b-lg border-t border-slate-200 z-10 flex flex-col justify-center">
+                    <p class="text-[0.5rem] italic text-slate-400 text-right w-full -mt-1">RDP [Reconstruction and Development Programme] houses, a type of government subsidized housing in Johannesburg</p>
+                    
+                    <p class="leading-tight">
+                        <span class="font-bold text-blue-700">Infrastructure Crisis:</span> Frequent <strong>rolling blackouts</strong> and <strong>water shortages</strong> in Johannesburg necessitate <strong>passive solutions</strong> that require water and efficient use of energy.
+                    </p>
+                    <p class="leading-tight">
+                        <span class="font-bold text-blue-700">Standardized Target:</span> Shall be designed for government <span class="font-bold text-slate-900">RDP houses</span> for a <strong>replicable, scaled deployment</strong>.
+                    </p>
+                    <p class="leading-tight">
+                        <span class="font-bold text-blue-700">Structural Challenge:</span> These dwellings mostly <strong>lack HVAC and traditional insulation</strong>, making occupants vulnerable to <strong>10-15°C diurnal swings</strong>.
+                    </p>
                 </div>
             </div>
         </div>
 
-        <!-- PERFORMANCE & STAKEHOLDER ALIGNMENT -->
-        <div class="col-span-7 flex flex-col bg-slate-50 border border-slate-200 p-2.5 rounded-lg">
-            <div class="flex justify-between items-end mb-1.5">
-                <h2 class="text-[10px] font-bold uppercase text-blue-900 tracking-wider leading-tight">Performance & Impact</h2>
-                <div class="flex gap-2 text-[0.6rem] font-bold">
-                    <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-blue-500"></span> Occ</span>
-                    <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-purple-500"></span> Opr</span>
-                    <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-orange-500"></span> Pol</span>
-                </div>
-            </div>
+        <div class="col-span-8 flex flex-col gap-1 h-full min-h-0">
             
-            <div class="space-y-1.5 flex-grow">
-                <!-- S-1.1.1 & S-1.2.1 Thermal -->
-                <div class="bg-white border-l-[3px] border-l-blue-500 border border-slate-200 p-1.5 rounded relative shadow-sm">
-                    <div class="flex justify-between items-center">
-                        <div class="flex items-center gap-1.5">
-                            <div class="w-2.5 h-2.5 bg-blue-500 rounded-[1px]"></div>
-                            <p class="text-[0.65rem] font-bold text-slate-800">Thermal Control (S-1.1.1 & S-1.2.1)</p>
-                        </div>
-                        <div class="flex gap-1">
-                             <span class="tag tag-stakeholder border-blue-300 bg-blue-50 text-blue-700 text-[0.55rem] px-1 py-0.5">Occ</span>
-                             <span class="tag tag-stakeholder border-orange-300 bg-orange-50 text-orange-700 text-[0.55rem] px-1 py-0.5">Pol</span>
-                        </div>
+            <div class="flex flex-col shrink-0">
+                <h2 class="text-[10px] font-bold uppercase text-blue-900 mb-1.5 tracking-wider leading-tight border-b border-slate-200 pb-1">Lessons From Prototyping</h2>
+                <div class="flex flex-col gap-2 mt-1">
+                    <div class="bg-white border-l-[3px] border-l-blue-500 p-2 border border-slate-200 rounded-lg shadow-sm">
+                        <p class="font-bold text-[0.7rem] text-slate-800 mb-0.5 border-b border-slate-100 pb-0.5">Context & Scope</p>
+                        <ul class="list-disc pl-3 text-[0.55rem] text-slate-600 space-y-0.5">
+                            <li>Rescoping to <span class="font-bold text-slate-800">RDP houses</span> for <strong>standardization</strong> after initially targetting all dwellings in Johannesburg.</li>
+                            <li><strong>South African national standards (SANS 10400-XA)</strong> for insulation in new builds, which BARRY can help implement.</li>
+                        </ul>
                     </div>
-                    <p class="text-[0.6rem] text-slate-600 leading-tight mt-0.5">Triggers heating at <span class="font-bold"><21°C</span> and cooling at <span class="font-bold">>24°C</span>. Maintains <span class="font-bold">18-27°C</span> comfort zone despite 3-30°C external swings.</p>
-                </div>
-
-                <!-- S-1.1.2 & S-1.1.3 Responsiveness -->
-                <div class="bg-white border-l-[3px] border-l-purple-500 border border-slate-200 p-1.5 rounded relative shadow-sm">
-                    <div class="flex justify-between items-center">
-                        <div class="flex items-center gap-1.5">
-                            <div class="w-2.5 h-2.5 bg-purple-500 rounded-[1px]"></div>
-                            <p class="text-[0.65rem] font-bold text-slate-800">Responsiveness (S-1.1.2 & S-1.1.3)</p>
-                        </div>
-                        <span class="tag tag-stakeholder border-purple-300 bg-purple-50 text-purple-700 text-[0.55rem] px-1 py-0.5">Opr</span>
+                    <div class="bg-white border-l-[3px] border-l-purple-500 p-2 border border-slate-200 rounded-lg shadow-sm">
+                        <p class="font-bold text-[0.7rem] text-slate-800 mb-0.5 border-b border-slate-100 pb-0.5">Design Knowledge</p>
+                        <ul class="list-disc pl-3 text-[0.55rem] text-slate-600 space-y-0.5">
+                            <li>Working with <span class="font-bold text-slate-800">microcontrollers</span> and sensors, such as <strong>photoresistors and thermistors</strong>.</li>
+                            <li><strong>Laser cutting holes</strong> instead of manually drilling them for <strong>faster deployment & greater standardization</strong>.</li>
+                            <li><strong>Hysteresis based logic</strong> for alternating between states based on <strong>internal temperatures</strong> (controlled in a stable range) instead of <strong>external temperatures</strong> (varies seasonally).</li>
+                            </ul>
                     </div>
-                    <p class="text-[0.6rem] text-slate-600 leading-tight mt-0.5">Accurately detects <span class="font-bold">>2°C</span> shifts. Mode switch completes in <span class="font-bold">30s</span> (Target: < 1 min), well within daily cycle needs.</p>
-                </div>
-
-                <!-- S-2.1.1 & S-3.2.1 Efficiency & Noise -->
-                <div class="bg-white border-l-[3px] border-l-orange-500 border border-slate-200 p-1.5 rounded relative shadow-sm">
-                    <div class="flex justify-between items-center">
-                        <div class="flex items-center gap-1.5">
-                            <div class="w-2.5 h-2.5 bg-orange-500 rounded-[1px]"></div>
-                            <p class="text-[0.65rem] font-bold text-slate-800">Efficiency & Noise (S-2.1.1 & S-3.2.1)</p>
-                        </div>
-                        <div class="flex gap-1">
-                             <span class="tag tag-stakeholder border-orange-300 bg-orange-50 text-orange-700 text-[0.55rem] px-1 py-0.5">Pol</span>
-                             <span class="tag tag-stakeholder border-blue-300 bg-blue-50 text-blue-700 text-[0.55rem] px-1 py-0.5">Occ</span>
-                        </div>
-                    </div>
-                    <p class="text-[0.6rem] text-slate-600 leading-tight mt-0.5">Draws around 0.146kJ/day <span class="font-bold">< 57kJ/day</span> grid energy (comparable to a 2W fan). Switches quietly at a mean noise level of <span class="font-bold"> 37.4 dBA</span>, with few peaks above 40 dBA target maximum.</p>
-                </div>
-
-                <!-- S-3.1.1 Autonomy Outcome -->
-                <div class="bg-white border-l-[3px] border-l-green-700 border border-slate-200 p-1.5 rounded relative shadow-sm">
-                    <div class="flex justify-between items-center">
-                        <div class="flex items-center gap-1.5">
-                            <div class="w-2.5 h-2.5 bg-green-700 rounded-[1px]"></div>
-                            <p class="text-[0.65rem] font-bold text-slate-800">Autonomy Outcome (S-3.1.1)</p>
-                        </div>
-                        <div class="flex gap-1">
-                             <span class="tag tag-stakeholder border-purple-300 bg-purple-50 text-purple-700 text-[0.55rem] px-1 py-0.5">Opr</span>
-                             <span class="tag tag-stakeholder border-blue-300 bg-blue-50 text-blue-700 text-[0.55rem] px-1 py-0.5">Occ</span>
-                        </div>
-                    </div>
-                    <p class="text-[0.6rem] text-slate-600 leading-tight mt-0.5">System operates for <span class="font-bold">10+ day/night cycles</span> without manual user intervention, achieving low-maintenance operation.</p>
-                </div>
-
-                <!-- Holistic Impact Assessment -->
-                <div class="bg-blue-900 p-1.5 rounded text-[0.6rem] text-white mt-1 shadow-sm">
-                    <p class="font-bold mb-0.5">Holistic Impact Assessment:</p>
-                    <p class="italic opacity-90 leading-tight">BARRY aligns Technology Developers (cost-effective TPU/Wood) with Occupant Needs (comfort/quiet) and Policy Makers (passive heating/cooling) to create a feasible sustainability solution.</p>
                 </div>
             </div>
+
+            <div class="flex flex-col flex-grow">
+                <div class="flex justify-between items-end mb-1.5 border-b border-slate-200 pb-1">
+                    <h2 class="text-[10px] font-bold uppercase text-blue-900 tracking-wider leading-tight">Performance & Impact</h2>
+                    <div class="flex gap-2 text-[0.6rem] font-bold">
+                        <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-blue-500"></span> Occ</span>
+                        <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-purple-500"></span> Opr</span>
+                        <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-orange-500"></span> Pol</span>
+                    </div>
+                </div>
+                
+                <div class="flex flex-col gap-1.5 flex-grow justify-between mt-1">
+                    <div class="bg-white border-l-[3px] border-l-blue-500 border border-slate-200 p-1.5 rounded relative shadow-sm">
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center gap-1.5">
+                                <div class="w-2.5 h-2.5 bg-blue-500 rounded-[1px]"></div>
+                                <p class="text-[0.65rem] font-bold text-slate-800">Thermal Control (S-1.1.1 & S-1.2.1)</p>
+                            </div>
+                            <div class="flex gap-1">
+                                 <span class="tag tag-stakeholder border-blue-300 bg-blue-50 text-blue-700 text-[0.55rem] px-1 py-0.5">Occ</span>
+                                 <span class="tag tag-stakeholder border-orange-300 bg-orange-50 text-orange-700 text-[0.55rem] px-1 py-0.5">Pol</span>
+                            </div>
+                        </div>
+                        <p class="text-[0.6rem] text-slate-600 leading-tight mt-0.5">Triggers heating at <span class="font-bold"><21°C</span> and cooling at <span class="font-bold">>24°C</span>. Maintains <span class="font-bold">18-27°C</span> comfort zone despite 3-30°C external swings.</p>
+                    </div>
+
+                    <div class="bg-white border-l-[3px] border-l-purple-500 border border-slate-200 p-1.5 rounded relative shadow-sm">
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center gap-1.5">
+                                <div class="w-2.5 h-2.5 bg-purple-500 rounded-[1px]"></div>
+                                <p class="text-[0.65rem] font-bold text-slate-800">Responsiveness (S-1.1.2 & S-1.1.3)</p>
+                            </div>
+                            <span class="tag tag-stakeholder border-purple-300 bg-purple-50 text-purple-700 text-[0.55rem] px-1 py-0.5">Opr</span>
+                        </div>
+                        <p class="text-[0.6rem] text-slate-600 leading-tight mt-0.5">Accurately detects <span class="font-bold">>2°C</span> shifts. Mode switch completes in <span class="font-bold">30s</span> (Target: < 1 min), well within daily cycle needs.</p>
+                    </div>
+
+                    <div class="bg-white border-l-[3px] border-l-orange-500 border border-slate-200 p-1.5 rounded relative shadow-sm">
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center gap-1.5">
+                                <div class="w-2.5 h-2.5 bg-orange-500 rounded-[1px]"></div>
+                                <p class="text-[0.65rem] font-bold text-slate-800">Efficiency & Noise (S-2.1.1 & S-3.2.1)</p>
+                            </div>
+                            <div class="flex gap-1">
+                                 <span class="tag tag-stakeholder border-orange-300 bg-orange-50 text-orange-700 text-[0.55rem] px-1 py-0.5">Pol</span>
+                                 <span class="tag tag-stakeholder border-blue-300 bg-blue-50 text-blue-700 text-[0.55rem] px-1 py-0.5">Occ</span>
+                            </div>
+                        </div>
+                        <p class="text-[0.6rem] text-slate-600 leading-tight mt-0.5">Draws around 0.146kJ/day <span class="font-bold">< 57kJ/day</span> grid energy (comparable to a 2W fan). Switches quietly at a mean noise level of <span class="font-bold"> 37.4 dBA</span>, with few peaks above 40 dBA target maximum.</p>
+                    </div>
+
+                    <div class="bg-white border-l-[3px] border-l-green-700 border border-slate-200 p-1.5 rounded relative shadow-sm">
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center gap-1.5">
+                                <div class="w-2.5 h-2.5 bg-green-700 rounded-[1px]"></div>
+                                <p class="text-[0.65rem] font-bold text-slate-800">Autonomy Outcome (S-3.1.1)</p>
+                            </div>
+                            <div class="flex gap-1">
+                                 <span class="tag tag-stakeholder border-purple-300 bg-purple-50 text-purple-700 text-[0.55rem] px-1 py-0.5">Opr</span>
+                                 <span class="tag tag-stakeholder border-blue-300 bg-blue-50 text-blue-700 text-[0.55rem] px-1 py-0.5">Occ</span>
+                            </div>
+                        </div>
+                        <p class="text-[0.6rem] text-slate-600 leading-tight mt-0.5">System operates for <span class="font-bold">10+ day/night cycles</span> without manual user intervention, achieving low-maintenance operation.</p>
+                    </div>
+
+                    <div class="bg-blue-900 p-1.5 rounded text-[0.6rem] text-white mt-1 shadow-sm">
+                        <p class="font-bold mb-0.5">Holistic Impact Assessment:</p>
+                        <p class="italic opacity-90 leading-tight">BARRY aligns Technology Developers (cost-effective TPU/Wood) with Occupant Needs (comfort/quiet) and Policy Makers (passive heating/cooling) to create a feasible sustainability solution.</p>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
-    <!-- FOOTER -->
-    <footer class="mt-auto pt-2 border-t border-slate-200 text-[0.6rem] text-slate-400 flex justify-between font-medium">
+    <footer class="mt-auto pt-2 border-t border-slate-200 text-[0.6rem] text-slate-400 flex justify-between font-medium shrink-0">
         <span>ESC204: Design Dossier Submission #2 | Visual Abstract</span>
         <span>Group 111C | University of Toronto</span>
     </footer>
